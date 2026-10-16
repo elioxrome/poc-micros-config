@@ -1,0 +1,33 @@
+# Instalación (una vez por clon):  pip install pre-commit && pre-commit install
+# A mano sobre todo el repo:       pre-commit run --all-files
+# El CI (.github/workflows/validate.yml) ejecuta esta misma lista.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: detect-private-key  # red de seguridad: aquí nunca van secretos
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [--strict]
+
+  - repo: local
+    hooks:
+      - id: validate-config
+        name: schemas y merge de la configuración
+        entry: python scripts/validate.py
+        language: python
+        additional_dependencies: [pyyaml>=6.0, jsonschema>=4.21, referencing>=0.35]
+        # El validador mira el repo entero (el merge cruza ficheros), no los ficheros
+        # del commit; por eso no recibe nombres y solo se lanza si toca algo relevante.
+        pass_filenames: false
+        files: ^(environments|microservices|schemas|scripts)/

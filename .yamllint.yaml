@@ -1,0 +1,17 @@
+extends: default
+
+rules:
+  # Los ficheros son mapas sueltos, no streams de varios documentos.
+  document-start: disable
+  # Comentarios alineados a mano tras un valor (p. ej. el motivo de fijar chart_version).
+  comments:
+    min-spaces-from-content: 1
+  # Evita que 'yes'/'on' se interpreten como booleanos sin querer (YAML 1.1).
+  truthy:
+    allowed-values: ["true", "false"]
+    check-keys: false
+  line-length:
+    max: 120
+
+# key-duplicates e indentation vienen activadas por 'default': son las que
+# más errores silenciosos evitan (la segunda clave duplicada pisa a la primera).

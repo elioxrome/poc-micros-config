@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "environment.schema.json",
+  "title": "Valores comunes de un entorno (environments/<env>.yaml)",
+  "description": "Solo admite campos que tienen sentido para todos los micros del entorno. Lo propio de cada micro (namespace, release_name, values_version) va en su deploy.yaml. app_name es común (p. ej. p4ms) y un deploy.yaml puede sobrescribirlo.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "app_name": { "$ref": "deployment.schema.json#/properties/app_name" },
+    "chart_version": { "$ref": "deployment.schema.json#/properties/chart_version" },
+    "repository_name": { "$ref": "deployment.schema.json#/properties/repository_name" },
+    "repository_values_name": { "$ref": "deployment.schema.json#/properties/repository_values_name" },
+    "repository_env": { "$ref": "deployment.schema.json#/properties/repository_env" },
+    "kubernetes": { "$ref": "deployment.schema.json#/properties/kubernetes" }
+  }
+}

@@ -1,0 +1,17 @@
+# Quién debe aprobar cada cambio. Solo tiene efecto si la protección de la rama main
+# tiene activado "Require review from Code Owners".
+#
+# Gana la ÚLTIMA regla que coincide, por eso lo general va arriba y lo protegido abajo.
+# @devops-leads es un marcador: en una organización de GitHub debe ser un equipo
+# real (@<org>/devops-leads); en un repo personal, sustituirlo por usuarios.
+
+*                           @elioxrome
+
+# pro: el entorno común y el pro/ de cualquier micro.
+/environments/pro.yaml      @elioxrome @devops-leads
+/microservices/*/pro/       @elioxrome @devops-leads
+
+# Quien cambie los contratos o estas reglas podría saltarse la protección de pro.
+/schemas/                   @elioxrome @devops-leads
+/scripts/                   @elioxrome @devops-leads
+/.github/                   @elioxrome @devops-leads
