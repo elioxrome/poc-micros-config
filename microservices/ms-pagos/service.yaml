@@ -1,0 +1,5 @@
+name: ms-pagos
+description: Pasarela de pagos con tarjeta
+owner: team-payments
+domain: payments
+stack: java
