@@ -1,7 +1,12 @@
 {
   "app_name": "ms-demo-1",
+  "chart_version": "1.4.0",
   "namespace": "int-ns-baas",
   "release_name": "ms-demo-1",
+  "repository_name": "helm-charts",
+  "repository_values_name": "helm-values",
+  "repository_env": "int",
+  "values_version": "7aa08dea8869",
   "kubernetes": [
     "eks",
     "ocp"
