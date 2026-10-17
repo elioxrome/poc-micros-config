@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "service.schema.json",
   "title": "Metadatos de un micro (microservices/<micro>/service.yaml)",
-  "description": "Datos del micro que no dependen del entorno. 'name' debe coincidir con el nombre de la carpeta.",
+  "description": "Datos del micro que no dependen del entorno. 'name' debe coincidir con el nombre de la carpeta. Los cinco campos de 'required' son obligatorios; cualquier otro (tier, cmdb_id, repo_url...) es del equipo, con un nombre que cumpla 'propertyNames'.",
   "type": "object",
-  "additionalProperties": false,
+  "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,62}$" },
   "required": ["name", "description", "owner", "domain", "stack"],
   "properties": {
     "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },

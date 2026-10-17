@@ -22,7 +22,7 @@ environments/                # común a todos los micros de cada entorno
   int.yaml · pre.yaml · pro.yaml
 microservices/
   <micro>/
-    service.yaml             # metadatos: name, description, owner, domain, stack
+    service.yaml             # metadatos: name, description, owner, domain, stack (+ los que quiera el equipo)
     values.yaml              # values base, comunes a todos los entornos
     <env>/
       deploy.json            # descriptor del micro en ese entorno
@@ -33,6 +33,7 @@ scripts/validate.py          # schemas + merge; lo ejecutan pre-commit y el CI
 
 - Los entornos que existen son los ficheros de `environments/`.
 - Un micro se despliega en un entorno **si existe** `microservices/<micro>/<env>/deploy.json`.
+  Puede no desplegarse en ninguno todavía: basta su `service.yaml` (y, si quiere, el `values.yaml` base).
 - El **entorno** sale de la ruta: no se escribe en ningún fichero.
 - El stack (`java`, `python`…) es un dato de `service.yaml`, no una carpeta: así la ruta
   de un micro no cambia si cambia su stack y su nombre es único en todo el repo.
