@@ -1,0 +1,3 @@
+# Solo lo que cambia en este entorno respecto a la base (merge profundo, como Helm).
+env:
+  SPRING_PROFILES_ACTIVE: ${env}

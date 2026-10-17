@@ -1,0 +1,6 @@
+# Metadatos del micro (candidato a catalog-info.yaml de Backstage).
+name: ${service}
+description: Qué hace el micro, en una línea
+owner: team-xxx
+domain: xxx
+stack: java
