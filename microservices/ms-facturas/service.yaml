@@ -1,0 +1,5 @@
+name: ms-facturas
+description: Gestión del onboarding de clientes BaaS
+owner: team-baas
+domain: baas
+stack: java
