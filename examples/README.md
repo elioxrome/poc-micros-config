@@ -8,7 +8,7 @@ examples/
 ├── service.yaml        → microservices/<micro>/service.yaml   (solo micros nuevos)
 ├── values.yaml         → microservices/<micro>/values.yaml    (solo micros nuevos)
 └── env/
-    ├── deploy.yaml     → microservices/<micro>/<env>/deploy.yaml
+    ├── deploy.json     → microservices/<micro>/<env>/deploy.json
     ├── values.yaml     → microservices/<micro>/<env>/values.yaml
     └── <otro fichero>  → microservices/<micro>/<env>/<otro fichero>
 ```
@@ -21,7 +21,8 @@ Marcadores que se sustituyen al copiar:
 | `${env}` | entorno | `pre` |
 | `${ENV}` | entorno en mayúsculas | `PRE` |
 
-Todo lo demás (claves, orden, comentarios) se copia tal cual: **para cambiar el formato de
+Cada fichero conserva el formato de su extensión (`.json` en JSON, el resto en YAML), y
+todo lo demás (claves, orden, comentarios) se copia tal cual: **para cambiar el formato de
 las altas, se cambian estos ficheros** por PR. El CI no los valida como configuración
 (`validate.py` solo mira `environments/` y `microservices/`), pero sí pasan yamllint: por eso
 los marcadores son `${...}` y no `{{...}}`, que en YAML abriría un mapa.

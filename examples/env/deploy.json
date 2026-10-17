@@ -1,0 +1,5 @@
+{
+  "app_name": "${service}",
+  "namespace": "${env}-ns-xxx",
+  "release_name": "${service}"
+}
