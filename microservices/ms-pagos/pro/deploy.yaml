@@ -1,4 +1,0 @@
-app_name: ms-pagos
-namespace: pro-ns-payments
-release_name: ms-pagos
-chart_version: 1.3.1   # fijado: la 1.3.2 cambia el probe de readiness, pendiente validar en pre

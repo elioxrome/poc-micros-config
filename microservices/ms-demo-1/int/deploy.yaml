@@ -1,6 +1,0 @@
-app_name: ms-demo-1
-namespace: int-ns-baas
-release_name: ms-demo-1
-kubernetes:  # agregado ocp
-  - eks
-  - ocp

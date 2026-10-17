@@ -1,0 +1,6 @@
+{
+  "app_name": "ms-pagos",
+  "namespace": "pro-ns-payments",
+  "release_name": "ms-pagos",
+  "chart_version": "1.3.1"
+}
