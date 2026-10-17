@@ -22,7 +22,7 @@ environments/                # común a todos los micros de cada entorno
   int.yaml · pre.yaml · pro.yaml
 microservices/
   <micro>/
-    service.yaml             # metadatos: name, description, owner, domain, stack
+    service.yaml             # metadatos: name, description, owner, domain, stack (+ los que quiera el equipo)
     values.yaml              # values base, comunes a todos los entornos
     <env>/
       deploy.json            # descriptor del micro en ese entorno
