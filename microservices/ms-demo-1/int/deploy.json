@@ -6,7 +6,7 @@
   "repository_name": "helm-charts",
   "repository_values_name": "helm-values",
   "repository_env": "int",
-  "values_version": "7aa08dea8869",
+  "values_version": "1.0.0",
   "kubernetes": [
     "eks",
     "ocp"
