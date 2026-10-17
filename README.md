@@ -8,7 +8,7 @@ sirve dos cosas distintas:
 
 | Salida | Para quién | Se construye con |
 |---|---|---|
-| JSON de despliegue | Tower / AAP (extra_vars) | `environments/<env>.yaml` + `microservices/<micro>/<env>/deploy.yaml` + `env` + `action` + `values_version` |
+| JSON de despliegue | Tower / AAP (extra_vars) | `environments/<env>.yaml` + `microservices/<micro>/<env>/deploy.json` + `env` + `action` + `values_version` |
 | `values.yaml` | Helm (`helm upgrade -f`) | `microservices/<micro>/values.yaml` + `microservices/<micro>/<env>/values.yaml` |
 
 ## Estructura
@@ -25,14 +25,14 @@ microservices/
     service.yaml             # metadatos: name, description, owner, domain, stack
     values.yaml              # values base, comunes a todos los entornos
     <env>/
-      deploy.yaml            # descriptor del micro en ese entorno
+      deploy.json            # descriptor del micro en ese entorno
       values.yaml            # solo diferencias respecto a la base (opcional)
 schemas/                     # un schema por tipo de fichero
 scripts/validate.py          # schemas + merge; lo ejecutan pre-commit y el CI
 ```
 
 - Los entornos que existen son los ficheros de `environments/`.
-- Un micro se despliega en un entorno **si existe** `microservices/<micro>/<env>/deploy.yaml`.
+- Un micro se despliega en un entorno **si existe** `microservices/<micro>/<env>/deploy.json`.
 - El **entorno** sale de la ruta: no se escribe en ningún fichero.
 - El stack (`java`, `python`…) es un dato de `service.yaml`, no una carpeta: así la ruta
   de un micro no cambia si cambia su stack y su nombre es único en todo el repo.
@@ -40,7 +40,7 @@ scripts/validate.py          # schemas + merge; lo ejecutan pre-commit y el CI
 
 ## Cómo se combinan los ficheros
 
-**Descriptor (JSON de Tower): merge superficial.** Las claves de `deploy.yaml` pisan a las
+**Descriptor (JSON de Tower): merge superficial.** Las claves de `deploy.json` pisan a las
 de `environments/<env>.yaml`. Las listas (p. ej. `kubernetes`) se sustituyen enteras.
 
 **Values de Helm: merge profundo, igual que `helm -f base -f overlay`.** Los mapas se
@@ -59,9 +59,9 @@ resources:                    resources:                     resources:
 - **Por defecto** la API lo calcula: hash corto del último commit que tocó la base o el
   overlay de ese micro. Cambiar otro micro no le cambia la versión; cambiar la base sí
   cambia la de todos sus entornos (correcto: cambia lo que se despliega).
-- **Modo transición**: si `deploy.yaml` define `values_version`, la API lo respeta. Sirve
+- **Modo transición**: si `deploy.json` define `values_version`, la API lo respeta. Sirve
   mientras el playbook siga descargando los values de Artifactory. Cuando Ansible pida
-  los values a la API (`/values.yaml?version=<values_version>`), se borra de los `deploy.yaml`.
+  los values a la API (`/values.yaml?version=<values_version>`), se borra de los `deploy.json`.
 
 ## Cómo se hace un cambio
 
@@ -77,7 +77,8 @@ Sin pre-commit: `pip install -r scripts/requirements.txt && python scripts/valid
 
 - **Nunca secretos.** Solo referencias a rutas de Vault (p. ej. `vault.secretPath`).
 - Subir el chart de todo un entorno = cambiar `chart_version` en `environments/<env>.yaml`.
-- Un micro desfasado se fija con `chart_version` en su `deploy.yaml`, con un comentario del motivo.
+- Un micro desfasado se fija con `chart_version` en su `deploy.json`; el motivo va en la
+  descripción del PR (JSON no admite comentarios).
 
 ## Añadir un micro
 
@@ -91,10 +92,12 @@ domain: xxx
 stack: java
 EOF
 cp microservices/ms-demo-1/values.yaml microservices/ms-nuevo/values.yaml
-cat > microservices/ms-nuevo/pre/deploy.yaml <<'EOF'
-app_name: ms-nuevo
-namespace: pre-ns-xxx
-release_name: ms-nuevo
+cat > microservices/ms-nuevo/pre/deploy.json <<'EOF'
+{
+  "app_name": "ms-nuevo",
+  "namespace": "pre-ns-xxx",
+  "release_name": "ms-nuevo"
+}
 EOF
 python scripts/validate.py
 ```

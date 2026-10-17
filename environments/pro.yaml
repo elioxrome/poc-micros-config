@@ -1,4 +1,4 @@
-# Común a todos los micros de pro. Un deploy.yaml puede sobrescribir cualquier clave.
+# Común a todos los micros de pro. Un deploy.json puede sobrescribir cualquier clave.
 # Cambios aquí requieren aprobación de @devops-leads (ver .github/CODEOWNERS).
 chart_version: 1.3.2
 repository_name: helm-charts

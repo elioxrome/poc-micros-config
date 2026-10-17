@@ -6,10 +6,10 @@ Qué comprueba:
   2. microservices/<micro>/service.yaml: existe, cumple schemas/service.schema.json
      y su 'name' coincide con la carpeta (la API identifica al micro por la carpeta).
   3. microservices/<micro>/<env>/: el entorno existe en environments/ y la carpeta
-     tiene deploy.yaml (es lo que indica que el micro se despliega ahí).
-  4. deploy.yaml suelto contra schemas/deployment.schema.json SIN 'required', para
+     tiene deploy.json (es lo que indica que el micro se despliega ahí).
+  4. deploy.json suelto contra schemas/deployment.schema.json SIN 'required', para
      señalar el fichero exacto de un typo; y el MERGE environments/<env>.yaml +
-     deploy.yaml con 'required', porque un campo obligatorio puede venir de
+     deploy.json con 'required', porque un campo obligatorio puede venir de
      cualquiera de las dos capas.
   5. values.yaml base + overlay del entorno: ambos mapas y fusionables (merge
      profundo, igual que Helm).
@@ -37,6 +37,9 @@ ROOT = Path(__file__).resolve().parent.parent
 ENVS_DIR = ROOT / "environments"
 SERVICES_DIR = ROOT / "microservices"
 SCHEMAS_DIR = ROOT / "schemas"
+# Nombre del descriptor de un micro en un entorno. Debe coincidir con el que usa la API
+# (CFG_LAYOUT_DEPLOY_FILE). Es JSON: no admite comentarios (el motivo va en el PR).
+DEPLOY_FILE = "deploy.json"
 NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 
@@ -57,7 +60,12 @@ def load_schemas() -> tuple[dict[str, dict[str, Any]], Registry]:
 
 
 def load_map(path: Path) -> dict[str, Any]:
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    """Lee un fichero según su extensión: .json como JSON; el resto, como YAML."""
+    text = path.read_text(encoding="utf-8")
+    if path.suffix == ".json":
+        data = json.loads(text) if text.strip() else {}
+    else:
+        data = yaml.safe_load(text) or {}
     if not isinstance(data, dict):
         raise TypeError("la raíz debe ser un mapa (clave: valor)")
     return data
@@ -169,21 +177,21 @@ def main() -> int:
                 errors.append(f"{ewhere}: el entorno '{env}' no existe en environments/")
                 continue
 
-            deploy_path = env_dir / "deploy.yaml"
+            deploy_path = env_dir / DEPLOY_FILE
             if not deploy_path.exists():
-                errors.append(f"{ewhere}: falta deploy.yaml")
+                errors.append(f"{ewhere}: falta {DEPLOY_FILE}")
                 continue
             try:
                 deploy = load_map(deploy_path)
             except Exception as exc:  # noqa: BLE001
-                errors.append(f"{rel(deploy_path)}: YAML inválido: {exc}")
+                errors.append(f"{rel(deploy_path)}: inválido: {exc}")
                 continue
 
-            # Primero el fichero suelto: un typo se reporta en deploy.yaml, no en el merge.
+            # Primero el fichero suelto: un typo se reporta en deploy.json, no en el merge.
             part_errors = schema_errors(deploy_part_validator, deploy, rel(deploy_path))
             errors += part_errors
             if not part_errors:
-                # Merge superficial: deploy.yaml pisa a environments/<env>.yaml.
+                # Merge superficial: deploy.json pisa a environments/<env>.yaml.
                 merged = {**environments[env], **deploy}
                 missing = [
                     f"{ewhere} (fusionado): {e.message}"

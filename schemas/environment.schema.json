@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "environment.schema.json",
   "title": "Valores comunes de un entorno (environments/<env>.yaml)",
-  "description": "Solo admite campos que tienen sentido para todos los micros del entorno. Lo propio de cada micro (namespace, release_name, values_version) va en su deploy.yaml. app_name es común (p. ej. p4ms) y un deploy.yaml puede sobrescribirlo.",
+  "description": "Solo admite campos que tienen sentido para todos los micros del entorno. Lo propio de cada micro (namespace, release_name, values_version) va en su deploy.json. app_name es común (p. ej. p4ms) y un deploy.json puede sobrescribirlo.",
   "type": "object",
   "additionalProperties": false,
   "properties": {

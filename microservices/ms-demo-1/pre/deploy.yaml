@@ -1,8 +1,0 @@
-app_name: ms-demo-1
-chart_version: 1.4.10
-namespace: pre-ns-baas
-release_name: ms-demo-1
-repository_env: int
-values_version: 1.0.5
-kubernetes:
-  - eks

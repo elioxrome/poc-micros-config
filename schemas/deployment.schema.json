@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "deployment.schema.json",
-  "title": "Descriptor de despliegue (resultado del merge environments/<env>.yaml + microservices/<micro>/<env>/deploy.yaml)",
-  "description": "Lo que debe cumplir un micro en un entorno una vez fusionados sus ficheros. 'env' y 'action' no van aquí: los añade la API. Un deploy.yaml suelto se valida con este mismo schema ignorando 'required', porque un campo obligatorio puede venir de environments/<env>.yaml.",
+  "title": "Descriptor de despliegue (resultado del merge environments/<env>.yaml + microservices/<micro>/<env>/deploy.json)",
+  "description": "Lo que debe cumplir un micro en un entorno una vez fusionados sus ficheros. 'env' y 'action' no van aquí: los añade la API. Un deploy.json suelto se valida con este mismo schema ignorando 'required', porque un campo obligatorio puede venir de environments/<env>.yaml.",
   "type": "object",
   "additionalProperties": false,
   "required": [
