@@ -1,2 +1,29 @@
+# Values base de Helm, comunes a todos los entornos.
+# Los values.yaml de cada entorno solo llevan diferencias (merge profundo, como Helm).
+replicaCount: 2
+
+image:
+  repository: registry.example.com/payments/ms-pagos
+  tag: 3.14.2
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
 env:
-  SPRING_PROFILES_ACTIVE: pre
+  SPRING_PROFILES_ACTIVE: default
+  LOG_LEVEL: INFO
+  JAVA_OPTS: -XX:MaxRAMPercentage=75
+
+# Nunca secretos: solo la ruta de Vault de la que los lee el pod.
+vault:
+  secretPath: secret/payments/ms-pagos
