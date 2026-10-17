@@ -6,7 +6,8 @@ Qué comprueba:
   2. microservices/<micro>/service.yaml: existe, cumple schemas/service.schema.json
      y su 'name' coincide con la carpeta (la API identifica al micro por la carpeta).
   3. microservices/<micro>/<env>/: el entorno existe en environments/ y la carpeta
-     tiene deploy.json (es lo que indica que el micro se despliega ahí).
+     tiene deploy.json (es lo que indica que el micro se despliega ahí). Un micro sin
+     ninguna carpeta de entorno es válido: existe, pero aún no se despliega.
   4. deploy.json suelto contra schemas/deployment.schema.json SIN 'required', para
      señalar el fichero exacto de un typo; y el MERGE environments/<env>.yaml +
      deploy.json con 'required', porque un campo obligatorio puede venir de
@@ -167,9 +168,9 @@ def main() -> int:
             errors.append(f"{rel(base_values_path)}: YAML inválido: {exc}")
             continue
 
+        # Sin carpetas <env>/ también vale: el micro existe (catálogo, values base) antes de
+        # desplegarse en ninguno; se da de alta en cada entorno cuando toque.
         env_dirs = sorted(p for p in svc_dir.iterdir() if p.is_dir())
-        if not env_dirs:
-            errors.append(f"{where}: no se despliega en ningún entorno (sin carpetas <env>/)")
 
         for env_dir in env_dirs:
             env, ewhere = env_dir.name, rel(env_dir)
