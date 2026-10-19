@@ -25,10 +25,11 @@
     "repository_env": { "type": "string", "minLength": 1 },
     "values_version": { "type": "string", "minLength": 1 },
     "kubernetes": {
+      "description": "Plataformas donde se despliega. No hay lista cerrada: las de cada entorno las declara environments/<env>.yaml, y un deploy.json solo puede usar un subconjunto de ellas (lo comprueba scripts/validate.py; JSON Schema no puede mirar otro fichero).",
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "items": { "enum": ["eks", "ocp"] }
+      "items": { "type": "string", "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$", "maxLength": 63 }
     }
   }
 }

@@ -11,7 +11,8 @@ Qué comprueba:
   4. deploy.json suelto contra schemas/deployment.schema.json SIN 'required', para
      señalar el fichero exacto de un typo; y el MERGE environments/<env>.yaml +
      deploy.json con 'required', porque un campo obligatorio puede venir de
-     cualquiera de las dos capas.
+     cualquiera de las dos capas. Las plataformas de 'kubernetes' de un deploy.json
+     deben estar entre las que declara su entorno: el fichero del entorno es el catálogo.
   5. values.yaml base + overlay del entorno: ambos mapas y fusionables (merge
      profundo, igual que Helm).
   6. Que no haya dos micros con el mismo release_name en el mismo namespace y
@@ -100,6 +101,28 @@ def schema_errors(validator: Draft202012Validator, data: dict[str, Any], where: 
         field = ".".join(str(p) for p in err.absolute_path) or "(raíz)"
         out.append(f"{where}: {field}: {err.message}")
     return out
+
+
+def platform_errors(
+    env_data: dict[str, Any], deploy: dict[str, Any], where: str, env: str
+) -> list[str]:
+    """Un micro solo puede usar plataformas que su entorno declara.
+
+    No hay lista de plataformas en ningún schema: la de cada entorno está en su
+    environments/<env>.yaml. Así dar de alta una (p. ej. m3) es añadirla al entorno, y un
+    typo o un clúster que ese entorno no tiene se para aquí. Misma regla que la API
+    (DescriptorComposer). Si el entorno no declara ninguna, decide el micro.
+    """
+    declared, own = env_data.get("kubernetes"), deploy.get("kubernetes")
+    if not isinstance(declared, list) or not isinstance(own, list):
+        return []
+    unknown = [p for p in own if p not in declared]
+    if not unknown:
+        return []
+    return [
+        f"{where}: kubernetes: {', '.join(map(str, unknown))} no es una plataforma de {env} "
+        f"(el entorno declara: {', '.join(map(str, declared))})"
+    ]
 
 
 def main() -> int:
@@ -200,6 +223,7 @@ def main() -> int:
                     if e.validator == "required"
                 ]
                 errors += missing
+                errors += platform_errors(environments[env], deploy, rel(deploy_path), env)
                 # Sin namespace o release_name no hay release que comparar.
                 if not missing:
                     key = (env, merged["namespace"], merged["release_name"])

@@ -44,6 +44,11 @@ scripts/validate.py          # schemas + merge; lo ejecutan pre-commit y el CI
 **Descriptor (JSON de Tower): merge superficial.** Las claves de `deploy.json` pisan a las
 de `environments/<env>.yaml`. Las listas (p. ej. `kubernetes`) se sustituyen enteras.
 
+**Plataformas (`kubernetes`): las declara cada entorno.** No hay lista cerrada en ningún
+schema ni en la API: `environments/<env>.yaml` dice qué plataformas tiene ese entorno
+(`eks`, `ocp`, `m3`...), y un `deploy.json` solo puede quedarse con parte de ellas. Dar de
+alta una plataforma = añadirla al fichero del entorno por PR.
+
 **Values de Helm: merge profundo, igual que `helm -f base -f overlay`.** Los mapas se
 fusionan recursivamente; listas y escalares se sustituyen; una clave a `null` en el
 overlay borra la de la base.
