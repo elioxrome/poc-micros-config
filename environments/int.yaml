@@ -5,3 +5,4 @@ repository_values_name: helm-values
 repository_env: int
 kubernetes:
   - eks
+  - ocp
