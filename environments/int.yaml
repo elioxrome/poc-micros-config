@@ -1,5 +1,5 @@
 # Común a todos los micros de int. Un deploy.json puede sobrescribir cualquier clave.
-chart_version: 1.4.0
+chart_version: 0.1.1
 repository_name: helm-charts
 repository_values_name: helm-values
 repository_env: int
