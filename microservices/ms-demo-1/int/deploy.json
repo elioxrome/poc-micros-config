@@ -1,6 +1,5 @@
 {
   "app_name": "ms-demo-1",
-  "chart_version": "1.4.1",
   "namespace": "int-ns-baas",
   "release_name": "ms-demo-1",
   "repository_name": "helm-charts",
